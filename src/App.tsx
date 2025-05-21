@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LoginPage from './Pages/LoginPage';
-import DashboardPage from './Pages/DashboardPage';
-import ClientesPage from './Pages/ClientesPage';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
+import CustomerPage from './pages/CustomerPage';
 import Header from './components/Header';
 
 const App: React.FC = () => {
@@ -13,7 +13,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/clientes" element={<ClientesPage />} />
+          <Route path="/clientes" element={<CustomerPage />} />
         </Routes>
       </main>
     </BrowserRouter>
