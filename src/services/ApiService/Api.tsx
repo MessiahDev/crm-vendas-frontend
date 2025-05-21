@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.API_BASE_URL;
+const API_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({
     baseURL: API_URL,
@@ -15,7 +15,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('token') || sessionStorage.getItem('token');
     if (token) {
         config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${token}`; // Lembrar de checar se a api loga com ou sem o sufixo Bearer!
+        config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
 });

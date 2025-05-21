@@ -1,23 +1,22 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import CustomerPage from './pages/CustomerPage';
-import Header from './components/Header';
+import Dashboard from './pages/Dashboard';
+import PrivateRoute from './components/PrivateRoute';
 
-const App: React.FC = () => {
+function App() {
   return (
     <BrowserRouter>
-      <Header />
-      <main className="container mx-auto p-4">
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/clientes" element={<CustomerPage />} />
-        </Routes>
-      </main>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<LoginPage />} />
+
+        <Route element={<PrivateRoute />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
-};
+}
 
 export default App;
+
