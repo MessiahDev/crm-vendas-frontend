@@ -17,12 +17,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userString = localStorage.getItem('user');
-    if (token && userString) {
-      setUser(JSON.parse(userString));
+  const token = localStorage.getItem('token');
+  const userString = localStorage.getItem('user');
+
+  if (token && userString) {
+      userService.validateToken(token)
+        .then(() => setUser(JSON.parse(userString)))
+        .catch(() => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setUser(null);
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   const login = async (data: LoginRequest) => {

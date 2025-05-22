@@ -11,6 +11,14 @@ export const userService = {
         }
     },
 
+    validateToken: async (token: string): Promise<void> => {
+        await api.get(`/User/me`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+    },
+
     async register(data: RegisterRequest): Promise<AuthResponse> {
         const response = await api.post<AuthResponse>(`/User/register`, data);
         return response.data;
