@@ -53,7 +53,7 @@ const LeadListPage = () => {
         {loading ? (
           <p>Carregando...</p>
         ) : leads.length === 0 ? (
-          <p>Nenhum cliente cadastrado.</p>
+          <p>Nenhum lead cadastrado.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse">
@@ -62,6 +62,8 @@ const LeadListPage = () => {
                   <th className="p-3 text-left">Nome</th>
                   <th className="p-3 text-left">Email</th>
                   <th className="p-3 text-left">Status</th>
+                  <th className="p-3 text-left">Responsável</th>
+                  <th className="p-3 text-left">Cliente</th>
                   <th className="p-3 text-left">Ações</th>
                 </tr>
               </thead>
@@ -71,6 +73,8 @@ const LeadListPage = () => {
                     <td className="p-3">{lead.name}</td>
                     <td className="p-3">{lead.email}</td>
                     <td className="p-3">{leadStatusLabel(lead.status)}</td>
+                    <td className="p-3">{lead.userName ?? '-'}</td>
+                    <td className="p-3">{lead.customerName ?? '-'}</td>
                     <td className="p-3 space-x-2">
                       <Link to={`/leads/${lead.id}`} className="text-blue-500 hover:underline">
                         Editar

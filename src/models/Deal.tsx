@@ -7,4 +7,7 @@ export interface Deal {
     stage: DealStage;
     createdAt: Date;
     customerId: number;
+    customerName?: string;
+    leadId: number;
+    leadName?: string;
 }

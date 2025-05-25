@@ -13,6 +13,9 @@ import DealFormPage from './pages/DealFormPage';
 import UserListPage from './pages/UserListPage';
 import UserFormPage from './pages/UserFormPage';
 import MainLayout from './layouts/MainLayout';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import RegisterPage from './pages/RegisterPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 
 function App() {
   return (
@@ -20,6 +23,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
         <Route element={<PrivateRoute />}>
           <Route element={<MainLayout />}>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../services/ApiService/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import ThemeToggle from '../components/ThemeToggle';
 
 function LoginPage() {
@@ -55,13 +55,24 @@ function LoginPage() {
               className="w-full mt-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-dark-primary"
             />
           </div>
+
           {error && <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
+
           <button
             type="submit"
             className="w-full py-2 bg-primary hover:bg-blue-700 dark:bg-dark-primary dark:hover:bg-blue-600 text-white font-semibold rounded-lg transition"
           >
             Entrar
           </button>
+
+          <div className="flex justify-between mt-4 text-sm">
+            <Link to="/register" className="text-blue-600 hover:underline dark:text-blue-400">
+              Criar conta
+            </Link>
+            <Link to="/forgot-password" className="text-blue-600 hover:underline dark:text-blue-400">
+              Esqueci minha senha
+            </Link>
+          </div>
         </form>
       </div>
     </div>

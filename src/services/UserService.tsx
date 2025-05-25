@@ -11,6 +11,11 @@ export const userService = {
         }
     },
 
+    logout(): void {
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+    },
+
     async validateToken(): Promise<User> {
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         const response = await api.get<User>(`/User/me`, {
@@ -24,6 +29,18 @@ export const userService = {
     async register(data: RegisterRequest): Promise<AuthResponse> {
         const response = await api.post<AuthResponse>(`/User/register`, data);
         return response.data;
+    },
+
+    async requestPasswordReset(email: string): Promise<{ token?: string }> {
+        const response = await api.post('/User/forgot', { email });
+        return response.data;
+    },
+
+    async resetPassword(token: string, newPassword: string): Promise<void> {
+        await api.post('/User/reset', {
+            token,
+            newPassword
+        });
     },
 
     async getAll(): Promise<User[]> {

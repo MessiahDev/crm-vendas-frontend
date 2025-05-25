@@ -6,6 +6,25 @@ import type { Deal } from '../models/Deal';
 import type { Customer } from '../models/Customer';
 import { toast } from 'react-toastify';
 import { DealStage } from '../models/enums/DealStage';
+import type { Lead } from '../models/Lead';
+import { LeadService } from '../services/LeadService';
+
+const getStageLabel = (stage: DealStage): string => {
+  switch (stage) {
+    case DealStage.Novo:
+      return 'Novo';
+    case DealStage.Negociacao:
+      return 'Em negociação';
+    case DealStage.PropostaEnviada:
+      return 'Proposta enviada';
+    case DealStage.FechadoGanho:
+      return 'Fechado (Ganho)';
+    case DealStage.FechadoPerdido:
+      return 'Fechado (Perdido)';
+    default:
+      return 'Desconhecido';
+  }
+};
 
 const DealFormPage = () => {
   const { id } = useParams();
@@ -20,16 +39,21 @@ const DealFormPage = () => {
     stage: DealStage.Novo,
     createdAt: new Date(),
     customerId: 0,
+    leadId: 0,
   });
 
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Carrega todos os clientes para o select
     CustomerService.getAll()
       .then(setCustomers)
       .catch(() => toast.error('Erro ao carregar clientes'));
+
+    LeadService.getAll()
+      .then(setLeads)
+      .catch(() => toast.error('Erro ao carregar leads'));
   }, []);
 
   useEffect(() => {
@@ -42,8 +66,9 @@ const DealFormPage = () => {
             title: deal.title,
             value: deal.value,
             stage: deal.stage,
-            createdAt: deal.createdAt,
-            customerId: deal.customerId
+            createdAt: new Date(deal.createdAt),
+            customerId: deal.customerId,
+            leadId: deal.leadId,
           });
         })
         .catch(() => toast.error('Erro ao carregar negociação'))
@@ -58,7 +83,9 @@ const DealFormPage = () => {
 
     setFormData((prev) => ({
       ...prev,
-      [name]: name === 'stage' ? value as DealStage : name === 'value' || name === 'customerId' ? Number(value) : value,
+      [name]: ['stage', 'value', 'customerId'].includes(name)
+        ? Number(value)
+        : value,
     }));
   };
 
@@ -75,7 +102,7 @@ const DealFormPage = () => {
         toast.success('Negociação criada com sucesso!');
       }
 
-      navigate('/negociacoes');
+      navigate('/negocios');
     } catch {
       toast.error('Erro ao salvar negociação.');
     } finally {
@@ -123,11 +150,13 @@ const DealFormPage = () => {
             required
             className="w-full mt-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
           >
-            {Object.values(DealStage).map((stage) => (
-              <option key={stage} value={stage}>
-                {stage}
-              </option>
-            ))}
+            {Object.values(DealStage)
+              .filter((v) => !isNaN(Number(v)))
+              .map((stage) => (
+                <option key={stage} value={stage}>
+                  {getStageLabel(stage as DealStage)}
+                </option>
+              ))}
           </select>
         </div>
 
@@ -144,6 +173,24 @@ const DealFormPage = () => {
             {customers.map((customer) => (
               <option key={customer.id} value={customer.id}>
                 {customer.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm text-gray-700 dark:text-gray-200">Lead</label>
+          <select
+            name="leadId"
+            value={formData.leadId ?? ''}
+            onChange={handleChange}
+            required
+            className="w-full mt-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
+          >
+            <option value="">Selecione um lead</option>
+            {leads.map((l) => (
+              <option key={l.id} value={l.id}>
+                {l.name}
               </option>
             ))}
           </select>

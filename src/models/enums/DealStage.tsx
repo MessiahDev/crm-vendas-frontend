@@ -1,9 +1,9 @@
 export const DealStage = {
-    Novo: 'Novo',
-    Negociacao: 'Negociacao',
-    PropostaEnviada: 'PropostaEnviada',
-    FechadoGanho: 'FechadoGanho',
-    FechadoPerdido: 'FechadoPerdido'
+    Novo: 0,
+    Negociacao: 1,
+    PropostaEnviada: 2,
+    FechadoGanho: 3,
+    FechadoPerdido: 4
 } as const;
 
 export type DealStage = typeof DealStage[keyof typeof DealStage];
