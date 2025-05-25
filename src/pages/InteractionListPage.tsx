@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import type { Interaction } from '../models/Interaction';
 import { InteractionService } from '../services/InteractionService';
 import { Link } from 'react-router-dom';
@@ -24,24 +24,28 @@ const InteractionListPage = () => {
 
   return (
     <div className='min-h-screen p-6 dark:bg-gray-900 dark:text-white bg-gray-100 text-gray-900'>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Interações</h1>
-          <Link to="/interactions/novo" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          <Link to="/interacoes/novo" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
             Nova Interação
           </Link>
         </div>
 
         {loading ? (
           <p>Carregando...</p>
+        ) : interactions.length === 0 ? (
+          <p>Nenhum cliente cadastrado.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse">
               <thead>
                 <tr className='dark:bg-gray-800 bg-gray-200'>
-                  <th className="p-3 text-left">Título</th>
-                  <th className="p-3 text-left">Data</th>
                   <th className="p-3 text-left">Tipo</th>
+                  <th className="p-3 text-left">Notas</th>
+                  <th className="p-3 text-left">Data</th>
+                  <th className="p-3 text-left">Cliente</th>
+                  <th className="p-3 text-left">Lead</th>
                   <th className="p-3 text-left">Ações</th>
                 </tr>
               </thead>
@@ -51,8 +55,10 @@ const InteractionListPage = () => {
                     <td className="p-3">{interaction.type}</td>
                     <td className="p-3">{interaction.notes}</td>
                     <td className="p-3">{new Date(interaction.date).toLocaleDateString()}</td>
+                    <td className="p-3">{interaction.customerName}</td>
+                    <td className="p-3">{interaction.leadName}</td>
                     <td className="p-3 space-x-2">
-                      <Link to={`/interactions/${interaction.id}`} className="text-blue-500 hover:underline">
+                      <Link to={`/interacoes/${interaction.id}`} className="text-blue-500 hover:underline">
                         Editar
                       </Link>
                       <button

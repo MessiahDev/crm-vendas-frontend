@@ -24,11 +24,11 @@ const CustomerListPage = () => {
 
   return (
     <div className='min-h-screen p-6 dark:bg-gray-900 dark:text-white bg-gray-100 text-gray-800'>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Clientes</h1>
           <Link
-            to="/customers/new"
+            to="/clientes/novo"
             className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition"
           >
             Novo Cliente
@@ -40,10 +40,10 @@ const CustomerListPage = () => {
         ) : customers.length === 0 ? (
           <p>Nenhum cliente cadastrado.</p>
         ) : (
-          <div className="overflow-auto rounded-lg shadow">
-            <table className="min-w-full bg-white dark:bg-gray-800">
+          <div className="overflow-x-auto">
+            <table className="w-full table-auto border-collapse">
               <thead>
-                <tr>
+                <tr className="dark:bg-gray-800 bg-gray-200">
                   <th className="py-3 px-6 text-left font-medium">Nome</th>
                   <th className="py-3 px-6 text-left font-medium">Email</th>
                   <th className="py-3 px-6 text-left font-medium">Ações</th>
@@ -51,12 +51,12 @@ const CustomerListPage = () => {
               </thead>
               <tbody>
                 {customers.map((customer: any) => (
-                  <tr key={customer.id} className="border-t">
+                  <tr key={customer.id} className="dark:hover:bg-gray-800 hover:bg-gray-100">
                     <td className="py-3 px-6">{customer.name}</td>
                     <td className="py-3 px-6">{customer.email}</td>
                     <td className="py-3 px-6">
                       <Link
-                        to={`/customers/${customer.id}`}
+                        to={`/clientes/${customer.id}`}
                         className="text-blue-600 hover:underline"
                       >
                         Ver / Editar

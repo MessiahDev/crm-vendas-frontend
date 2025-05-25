@@ -3,6 +3,14 @@ export interface Customer {
     name: string;
     email: string;
     phone?: string;
-    conrtedAt: Date;
+    convertedAt: Date;
+    userId: number;
+}
+
+export interface CustomerRequest {
+    name: string;
+    email: string;
+    phone?: string;
+    convertedAt: Date;
     userId: number;
 }

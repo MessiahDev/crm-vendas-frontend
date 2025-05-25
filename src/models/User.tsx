@@ -16,6 +16,12 @@ export interface RegisterRequest {
     password: string;
 }
 
+export interface UpdateRequest {
+    name: string;
+    email: string;
+    password: string;
+}
+
 export interface AuthResponse {
     token: string;
     user: User;

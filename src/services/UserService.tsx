@@ -1,5 +1,5 @@
 import api from './ApiService/Api';
-import type { User, LoginRequest, RegisterRequest, AuthResponse } from '../models/User'
+import type { User, LoginRequest, RegisterRequest, UpdateRequest, AuthResponse } from '../models/User'
 
 export const userService = {
     async login(data: LoginRequest): Promise<AuthResponse> {
@@ -11,12 +11,14 @@ export const userService = {
         }
     },
 
-    validateToken: async (token: string): Promise<void> => {
-        await api.get(`/User/me`, {
+    async validateToken(): Promise<User> {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const response = await api.get<User>(`/User/me`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         });
+        return response.data;
     },
 
     async register(data: RegisterRequest): Promise<AuthResponse> {
@@ -34,12 +36,12 @@ export const userService = {
         return response.data;
     },
 
-    async create(user: User): Promise<User> {
+    async create(user: RegisterRequest): Promise<User> {
         const response = await api.post<User>('/User', user);
         return response.data;
     },
 
-    async update(id: number, user: User): Promise<User> {
+    async update(id: number, user: UpdateRequest): Promise<User> {
         const response = await api.put<User>(`/User/${id}`, user);
         return response.data;
     },

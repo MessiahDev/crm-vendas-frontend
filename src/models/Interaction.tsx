@@ -4,5 +4,7 @@ export interface Interaction {
     notes?: string | null;
     date: Date;
     leadId?: number | null;
+    leadName?: string | null;
     customerId?: number | null;
+    customerName?: string | null;
 }

@@ -7,7 +7,16 @@ export interface Lead {
     phone?: string | null;
     source?: string | null;
     status: LeadStatus;
-    createdAt: Date;
+    userId: number;
+    customerId: number;
+}
+
+export interface CreateLead {
+    name: string;
+    email?: string | null;
+    phone?: string | null;
+    source?: string | null;
+    status: LeadStatus;
     userId: number;
     customerId: number;
 }
