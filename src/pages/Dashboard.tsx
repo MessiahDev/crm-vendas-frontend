@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
       const customerSales: Record<string, number> = {};
       won.forEach(deal => {
-        const nome = deal.customerName ?? 'Desconhecido';
+        const nome = deal.customer?.name ?? 'Desconhecido';
         customerSales[nome] = (customerSales[nome] || 0) + (deal.value ?? 0);
       });
 
