@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DealService } from '../services/DealService';
 import { CustomerService } from '../services/CustomerService';
-import type { Deal } from '../models/Deal';
-import type { Customer } from '../models/Customer';
 import { toast } from 'react-toastify';
 import { DealStage } from '../models/enums/DealStage';
-import type { Lead } from '../models/Lead';
 import { LeadService } from '../services/LeadService';
+import type { Deal } from '../models/Deal';
+import type { Customer } from '../models/Customer';
+import type { Lead } from '../models/Lead';
 
 const getStageLabel = (stage: DealStage): string => {
   switch (stage) {
@@ -26,10 +26,21 @@ const getStageLabel = (stage: DealStage): string => {
   }
 };
 
+const formatCurrency = (value: string): string => {
+  const onlyNumbers = value.replace(/\D/g, '');
+  const number = parseFloat(onlyNumbers) / 100;
+
+  if (isNaN(number)) return '';
+
+  return number.toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+};
+
 const DealFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const isEditMode = !!id;
 
   const [formData, setFormData] = useState<Deal>({
@@ -42,6 +53,7 @@ const DealFormPage = () => {
     leadId: 0,
   });
 
+  const [formattedValue, setFormattedValue] = useState('');
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(false);
@@ -70,6 +82,7 @@ const DealFormPage = () => {
             customerId: deal.customerId,
             leadId: deal.leadId,
           });
+          setFormattedValue(deal.value.toFixed(2).replace('.', '')); // ex: "123456" para R$ 1.234,56
         })
         .catch(() => toast.error('Erro ao carregar negociação'))
         .finally(() => setLoading(false));
@@ -81,9 +94,21 @@ const DealFormPage = () => {
   ) => {
     const { name, value } = e.target;
 
+    if (name === 'value') {
+      const onlyNumbers = value.replace(/\D/g, '');
+      const numberValue = parseFloat(onlyNumbers) / 100;
+
+      setFormattedValue(value);
+      setFormData((prev) => ({
+        ...prev,
+        value: isNaN(numberValue) ? 0 : numberValue,
+      }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: ['stage', 'value', 'customerId'].includes(name)
+      [name]: ['stage', 'customerId', 'leadId'].includes(name)
         ? Number(value)
         : value,
     }));
@@ -132,9 +157,9 @@ const DealFormPage = () => {
         <div>
           <label className="block text-sm text-gray-700 dark:text-gray-200">Valor</label>
           <input
-            type="number"
+            type="text"
             name="value"
-            value={formData.value}
+            value={formatCurrency(formattedValue || formData.value.toString())}
             onChange={handleChange}
             required
             className="w-full mt-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
@@ -195,6 +220,7 @@ const DealFormPage = () => {
             ))}
           </select>
         </div>
+
         <div className="flex items-center justify-between">
           <button
             type="button"

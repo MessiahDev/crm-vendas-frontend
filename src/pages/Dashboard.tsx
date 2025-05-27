@@ -77,7 +77,7 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen p-6 dark:bg-dark-background dark:text-white bg-gray-100 text-gray-800 transition-colors duration-300">
+    <div className="p-6">
       <header className="max-w-7xl mx-auto rounded-xl flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-800 shadow-md">
         <h1 className="text-xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-4">
@@ -128,9 +128,9 @@ export default function DashboardPage() {
           <ul className="space-y-3">
             {recentActivities.map(activity => (
               <li key={activity.id} className="flex items-center gap-2">
-                <FontAwesomeIcon icon={faClock} className="text-blue-500" />
+                <FontAwesomeIcon icon={faClock} className="text-primary dark:text-secondary" />
                 <span>
-                  {activity.type} com {activity.customerName || activity.leadName} –{' '}
+                  {activity.type} com {activity.customerName || activity.leadName} - {' '}
                   {new Date(activity.date).toLocaleString('pt-BR', {
                     day: '2-digit',
                     month: '2-digit',
@@ -168,7 +168,7 @@ type CardProps = {
 function DashboardCard({ title, value, description, icon }: CardProps) {
   return (
     <div className="p-4 rounded-xl shadow-md bg-white dark:bg-gray-800 flex items-center gap-4">
-      <div className="text-blue-600 dark:text-blue-400 text-3xl">
+      <div className="text-blue-600 text-primary dark:text-secondary text-3xl">
         <FontAwesomeIcon icon={icon} />
       </div>
       <div>

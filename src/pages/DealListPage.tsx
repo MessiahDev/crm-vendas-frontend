@@ -68,11 +68,11 @@ const DealListPage = () => {
    };
 
    return (
-      <div className='min-h-screen p-6 text-gray-900 bg-background dark:bg-dark-background dark:text-white transition-colors duration-300'>
+      <div className='p-6'>
          <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6">
                <h1 className="text-2xl font-bold">Negócios</h1>
-               <Link to="/negocios/novo" className="px-4 py-2 bg-primary dark:bg-secondary text-white rounded hover:bg-dark-primary dark:hover:bg-dark-secondary transition duration-200">
+               <Link to="/negocios/novo" className="px-4 py-2 bg-primary dark:bg-secondary text-white rounded hover:bg-dark-primary dark:hover:bg-dark-secondary transition-colors duration-300">
                   Novo Negócio
                </Link>
             </div>
@@ -98,7 +98,7 @@ const DealListPage = () => {
                         {deals.map((deal) => (
                            <tr key={deal.id} className='dark:hover:bg-gray-800 hover:bg-gray-100'>
                               <td className="p-3">{deal.title}</td>
-                              <td className="p-3">R$ {deal.value.toFixed(2)}</td>
+                              <td className="p-3">{deal.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                               <td className="p-3">{getStageLabel(deal.stage)}</td>
                               <td className="p-3">{deal.customerName ?? '—'}</td>
                               <td className="p-3">{deal.leadName ?? '—'}</td>

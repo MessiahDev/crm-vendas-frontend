@@ -4,6 +4,8 @@ import { userService } from '../services/UserService';
 import type { User, RegisterRequest, UpdateRequest } from '../models/User';
 import { toast } from 'react-toastify';
 import { UserRole } from '../models/enums/UserRole';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 const useAuth = () => {
   const [role, setRole] = useState<number>(0);
@@ -37,7 +39,13 @@ const UserFormPage = () => {
     password: '',
   });
 
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const passwordsDoNotMatch = !isEditMode && formData.password && confirmPassword && formData.password !== confirmPassword;
+  const canEdit = role === 1 || role === 3;
 
   useEffect(() => {
     if (isEditMode) {
@@ -58,6 +66,11 @@ const UserFormPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isEditMode && passwordsDoNotMatch) {
+      toast.error('As senhas não coincidem.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -66,7 +79,7 @@ const UserFormPage = () => {
           name: formData.name,
           email: formData.email,
           role: formData.role,
-          password: formData.password
+          password: formData.password,
         };
         await userService.update(Number(id!), updateData);
         toast.success('Usuário atualizado com sucesso!');
@@ -82,8 +95,6 @@ const UserFormPage = () => {
       setLoading(false);
     }
   };
-
-  const canEdit = role === 1 || role === 3;
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white dark:bg-gray-800 rounded shadow">
@@ -124,7 +135,7 @@ const UserFormPage = () => {
               <label className="block text-sm text-gray-700 dark:text-gray-200">Perfil</label>
               <select
                 name="role"
-                value={formData.role === undefined || formData.role === null ? '' : formData.role}
+                value={formData.role ?? ''}
                 onChange={e => setFormData(prev => ({ ...prev, role: Number(e.target.value) as UserRole }))}
                 required
                 className="w-full mt-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
@@ -138,23 +149,65 @@ const UserFormPage = () => {
           )}
         </div>
 
-        <div>
-          {canEdit && (
-            <label className="block text-sm text-gray-700 dark:text-gray-200">
-              {isEditMode ? 'Nova Senha (opcional)' : 'Senha'}
-            </label>
-          )}
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required={!isEditMode}
-            hidden={!canEdit}
-            className="w-full mt-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
-          />
-        </div>
-          <div className="flex items-center justify-between">
+        {canEdit && (
+          <>
+            <div>
+              <label className="block text-sm text-gray-700 dark:text-gray-200">
+                {isEditMode ? 'Nova Senha (opcional)' : 'Senha'}
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required={!isEditMode}
+                  className={`w-full mt-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white pr-10 ${
+                    passwordsDoNotMatch ? 'border-red-500' : ''
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-2 flex items-center text-gray-600 dark:text-gray-300"
+                >
+                  <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+                </button>
+              </div>
+            </div>
+
+            {!isEditMode && (
+              <div>
+                <label className="block text-sm text-gray-700 dark:text-gray-200">Confirmar Senha</label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className={`w-full mt-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white pr-10 ${
+                      passwordsDoNotMatch ? 'border-red-500' : ''
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute inset-y-0 right-2 flex items-center text-gray-600 dark:text-gray-300"
+                  >
+                    <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {passwordsDoNotMatch && (
+              <p className="text-red-500 text-sm">As senhas não coincidem.</p>
+            )}
+          </>
+        )}
+
+        <div className="flex items-center justify-between">
           <button
             type="button"
             onClick={() => navigate('/usuarios')}

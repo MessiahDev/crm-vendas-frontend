@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { userService } from '../services/UserService';
-import type { User } from '../models/User';
 import { Link } from 'react-router-dom';
 import ConfirmDelete from '../components/ConfirmDelete';
 import { toast } from 'react-toastify';
@@ -30,7 +29,6 @@ const useAuth = () => {
 
 const UserListPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const { role } = useAuth();
 
@@ -38,18 +36,8 @@ const UserListPage = () => {
   const [customerIdToDelete, setCustomerIdToDelete] = useState<number | null>(null);
 
   useEffect(() => {
-    fetchUsers();
     fetchCustomers();
   }, []);
-
-  const fetchUsers = async () => {
-    try {
-      const data = await userService.getAll();
-      setUsers(data);
-    } catch (error) {
-      console.error('Erro ao buscar usuários:', error);
-    }
-  };
 
   const fetchCustomers = async () => {
     try {
@@ -84,22 +72,13 @@ const UserListPage = () => {
 
   const permission = role === 1 || role === 3;
 
-  const formatDate = (dateString: string | Date) => {
-    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
-    if (isNaN(date.getTime())) return '';
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
   return (
-    <div className='min-h-screen p-6 dark:bg-gray-900 dark:text-white bg-gray-100 text-gray-900'>
+    <div className='p-6'>
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Clientes</h1>
           {permission && (
-            <Link to="/clientes/novo" className="px-4 py-2 bg-primary dark:bg-secondary text-white rounded hover:bg-dark-primary dark:hover:bg-dark-secondary transition duration-200">
+            <Link to="/clientes/novo" className="px-4 py-2 bg-primary dark:bg-secondary text-white rounded hover:bg-dark-primary dark:hover:bg-dark-secondary transition-colors duration-300">
               Novo Cliente
             </Link>
           )}
@@ -128,8 +107,8 @@ const UserListPage = () => {
                     <td className="p-3">{customer.name}</td>
                     <td className="p-3">{customer.email}</td>
                     <td className="p-3">{customer.phone}</td>
-                    <td className="p-3">{formatDate(customer.convertedAt)}</td>
-                    <td className="p-3">{customer.user.name}</td>
+                    <td className="p-3">{new Date(customer.convertedAt).toLocaleDateString('pt-BR', { day: 'numeric', month: 'numeric', year: 'numeric' })}</td>
+                    <td className="p-3">{customer.user?.name}</td>
                     <td className="p-3 space-x-6">
                       <Link to={`/clientes/${customer.id}`} className="text-blue-500">
                         <FontAwesomeIcon icon={faEdit} title='Editar' />
