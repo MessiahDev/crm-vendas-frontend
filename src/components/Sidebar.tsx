@@ -36,8 +36,8 @@ const Sidebar = () => {
 
   const getRoleName = (role: number): string => {
     switch (role) {
-      case 1: return 'Usuário';
-      case 2: return 'Administrador';
+      case 1: return 'Administrador';
+      case 2: return 'Usuário';
       case 3: return 'Desenvolvedor';
       default: return 'Desconhecido';
     }
@@ -54,13 +54,13 @@ const Sidebar = () => {
 
   const linkStyle = ({ isActive }: { isActive: boolean }) =>
     (isActive
-      ? 'bg-blue-600 text-white'
+      ? 'bg-primary text-white dark:bg-secondary'
       : 'text-gray-800 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700') +
     ' flex items-center gap-3 py-2 px-4 rounded transition';
 
   return (
     <aside
-      className={`fixed top-0 left-0 h-screen bg-white dark:bg-gray-800 shadow-lg flex flex-col justify-between p-4 z-40 transition-all duration-300 ${
+      className={`fixed top-0 left-0 h-screen bg-white dark:bg-gray-800 flex flex-col justify-between p-4 z-40 transition-all duration-300 ${
         isExpanded ? 'w-64' : 'w-16 items-center'
       }`}
     >
@@ -76,7 +76,7 @@ const Sidebar = () => {
 
         {isExpanded ? (
           <>
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">CRM</h2>
+            <h2 className="text-2xl font-bold mb-6">CRM</h2>
             <nav className="space-y-2 w-full">
               <NavLink to="/dashboard" className={linkStyle}>
                 <FontAwesomeIcon icon={faTachometerAlt} />
@@ -128,10 +128,10 @@ const Sidebar = () => {
         )}
       </div>
 
-      <div className={`border-t border-gray-300 dark:border-gray-700 pt-4 w-full ${isExpanded ? 'flex items-center justify-between' : 'flex flex-col items-center gap-4'}`}>
+      <div className={`border-t border-gray-300 dark:border-gray-700 pt-4 h-16 w-full ${isExpanded ? 'flex items-center justify-between' : 'flex flex-col items-center gap-4'}`}>
         {isExpanded ? (
           <div className="flex items-center gap-3">
-            <FontAwesomeIcon icon={faUser} className="dark:text-gray-100" />
+            <FontAwesomeIcon icon={faUser} className="text-primary dark:text-secondary" />
             <div>
               <p className="text-sm font-medium text-gray-800 dark:text-white">
                 {userName || 'Carregando...'}

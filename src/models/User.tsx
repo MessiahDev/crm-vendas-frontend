@@ -4,7 +4,7 @@ export interface User {
     id: number;
     name: string;
     email: string;
-    role: 2;
+    role: UserRole;
     password: string;
 }
 
@@ -17,11 +17,13 @@ export interface RegisterRequest {
     name: string;
     email: string;
     password: string;
+    role: UserRole;
 }
 
 export interface UpdateRequest {
     name: string;
     email: string;
+    role: UserRole;
     password: string;
 }
 

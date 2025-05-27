@@ -15,7 +15,6 @@ const LeadFormPage = () => {
   const navigate = useNavigate();
   const isEditMode = !!id;
 
-  // formData adaptado ao modo (criação ou edição)
   const [formData, setFormData] = useState<Partial<Lead>>({
     name: '',
     email: '',
@@ -30,7 +29,6 @@ const LeadFormPage = () => {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Carrega usuários e clientes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -112,7 +110,7 @@ const LeadFormPage = () => {
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white dark:bg-gray-800 rounded shadow">
-      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+      <h1 className="text-2xl font-bold mb-6">
         {isEditMode ? 'Editar Lead' : 'Novo Lead'}
       </h1>
 
@@ -160,9 +158,9 @@ const LeadFormPage = () => {
             required
             className="w-full mt-1 px-3 py-2 border rounded dark:bg-gray-700 dark:text-white"
           >
-            {Object.entries(LeadStatus).map(([key, value]) => (
-              <option key={value} value={value}>
-                {key}
+            {Object.entries(LeadSource).map(([key, value]) => (
+              <option key={key} value={value}>
+                {value}
               </option>
             ))}
           </select>
@@ -219,14 +217,22 @@ const LeadFormPage = () => {
             ))}
           </select>
         </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? 'Salvando...' : 'Salvar'}
-        </button>
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => navigate('/leads')}
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+          >
+            Voltar
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 rounded text-white bg-primary dark:bg-secondary hover:bg-dark-primary dark:hover:bg-dark-secondary"
+          >
+            {loading ? 'Salvando...' : 'Salvar'}
+          </button>
+        </div>
       </form>
     </div>
   );

@@ -2,10 +2,34 @@ import { useEffect, useState } from 'react';
 import { userService } from '../services/UserService';
 import type { User } from '../models/User';
 import { Link } from 'react-router-dom';
+import ConfirmDelete from '../components/ConfirmDelete';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faEye, faTrashCan } from '@fortawesome/free-regular-svg-icons';
+
+const useAuth = () => {
+  const [role, setRole] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      try {
+        const userData = await userService.validateToken();
+        setRole(userData.role);
+      } catch (error) {
+        console.error('Erro ao validar token:', error);
+      }
+    };
+
+    fetchRole();
+  }, []);
+
+  return { role };
+};
 
 const UserListPage = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const { role } = useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -22,14 +46,31 @@ const UserListPage = () => {
     fetchUsers();
   }, []);
 
+  const permission = role === 1 || role === 3;
+
+  const handleDelete = async () => {
+    if (!userToDelete) return;
+
+    try {
+      await userService.delete(userToDelete.id);
+      setUsers((prev) => prev.filter((u) => u.id !== userToDelete.id));
+    } catch (error) {
+      console.error('Erro ao excluir usuário:', error);
+    } finally {
+      setUserToDelete(null);
+    }
+  };
+
   return (
-    <div className='min-h-screen p-6 dark:bg-gray-900 dark:text-white bg-gray-100 text-gray-900'>
+    <div className='min-h-screen p-6 text-gray-900 bg-background dark:bg-dark-background dark:text-white transition-colors duration-300'>
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Usuários</h1>
-          <Link to="/usuarios/novo" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-            Novo Usuário
-          </Link>
+          {permission && (
+            <Link to="/usuarios/novo" className="px-4 py-2 bg-primary dark:bg-secondary text-white rounded hover:bg-dark-primary dark:hover:bg-dark-secondary transition duration-200">
+              Novo Usuário
+            </Link>
+          )}
         </div>
 
         {loading ? (
@@ -51,16 +92,18 @@ const UserListPage = () => {
                   <tr key={user.id} className='dark:hover:bg-gray-800 hover:bg-gray-100'>
                     <td className="p-3">{user.name}</td>
                     <td className="p-3">{user.email}</td>
-                    <td className="p-3 space-x-2">
-                      <Link to={`/usuarios/${user.id}`} className="text-blue-500 hover:underline">
-                        Editar
+                    <td className="p-3 space-x-6">
+                      <Link to={`/usuarios/${user.id}`} className="text-blue-500">
+                        {permission ? <FontAwesomeIcon icon={faEdit} title='Editar' /> : <FontAwesomeIcon icon={faEye} title='Visualizar' />}
                       </Link>
-                      <button
-                        className="text-red-500 hover:underline"
-                        onClick={() => console.log('Excluir', user.id)}
-                      >
-                        Excluir
-                      </button>
+                      {permission && (
+                        <button
+                          className="text-red-500"
+                          onClick={() => setUserToDelete(user)}
+                        >
+                          <FontAwesomeIcon icon={faTrashCan} title='Excluir' />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -69,6 +112,12 @@ const UserListPage = () => {
           </div>
         )}
       </div>
+
+      <ConfirmDelete
+        isOpen={userToDelete !== null}
+        onClose={() => setUserToDelete(null)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };

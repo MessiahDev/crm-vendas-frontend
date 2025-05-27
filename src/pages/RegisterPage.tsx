@@ -46,6 +46,13 @@ function RegisterPage() {
           <button type="submit" className="w-full py-2 bg-primary hover:bg-blue-700 dark:bg-dark-primary dark:hover:bg-blue-600 text-white font-semibold rounded-lg transition">
             Cadastrar
           </button>
+          <button
+            type="button"
+            onClick={() => navigate('/login')}
+            className="w-full py-2 mt-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg transition"
+          >
+            Voltar ao Login
+          </button>
         </form>
       </div>
     </div>

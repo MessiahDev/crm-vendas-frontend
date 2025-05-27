@@ -100,7 +100,7 @@ const InteractionFormPage = () => {
 
   return (
     <div className="max-w-xl mx-auto p-6 bg-white dark:bg-gray-800 rounded shadow">
-      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+      <h1 className="text-2xl font-bold mb-6">
         {isEditMode ? 'Editar Interação' : 'Nova Interação'}
       </h1>
 
@@ -175,14 +175,23 @@ const InteractionFormPage = () => {
             ))}
           </select>
         </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? 'Salvando...' : 'Salvar'}
-        </button>
+        <div className="flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => navigate('/interacoes')}
+            
+            className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+          >
+            Voltar
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="px-4 py-2 rounded text-white bg-primary dark:bg-secondary hover:bg-dark-primary dark:hover:bg-dark-secondary"
+          >
+            {loading ? 'Salvando...' : 'Salvar'}
+          </button>
+        </div>
       </form>
     </div>
   );

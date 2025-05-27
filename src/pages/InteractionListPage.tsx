@@ -1,11 +1,15 @@
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Interaction } from '../models/Interaction';
 import { InteractionService } from '../services/InteractionService';
 import { Link } from 'react-router-dom';
+import ConfirmDelete from '../components/ConfirmDelete';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 const InteractionListPage = () => {
   const [interactions, setInteractions] = useState<Interaction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [interactionToDelete, setInteractionToDelete] = useState<Interaction | null>(null);
 
   useEffect(() => {
     const fetchInteractions = async () => {
@@ -22,12 +26,30 @@ const InteractionListPage = () => {
     fetchInteractions();
   }, []);
 
+  const handleDelete = async () => {
+    if (!interactionToDelete) return;
+
+    try {
+      await InteractionService.delete(interactionToDelete.id);
+      setInteractions((prev) =>
+        prev.filter((i) => i.id !== interactionToDelete.id)
+      );
+    } catch (error) {
+      console.error('Erro ao excluir interação:', error);
+    } finally {
+      setInteractionToDelete(null);
+    }
+  };
+
   return (
-    <div className='min-h-screen p-6 dark:bg-gray-900 dark:text-white bg-gray-100 text-gray-900'>
+    <div className="min-h-screen p-6 text-gray-900 bg-background dark:bg-dark-background dark:text-white transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Interações</h1>
-          <Link to="/interacoes/novo" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          <Link
+            to="/interacoes/novo"
+            className="px-4 py-2 bg-primary dark:bg-secondary text-white rounded hover:bg-dark-primary dark:hover:bg-dark-secondary transition duration-200"
+          >
             Nova Interação
           </Link>
         </div>
@@ -35,12 +57,12 @@ const InteractionListPage = () => {
         {loading ? (
           <p>Carregando...</p>
         ) : interactions.length === 0 ? (
-          <p>Nenhum cliente cadastrado.</p>
+          <p>Nenhuma interação cadastrada.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse">
               <thead>
-                <tr className='dark:bg-gray-800 bg-gray-200'>
+                <tr className="bg-gray-200 dark:bg-gray-800">
                   <th className="p-3 text-left">Tipo</th>
                   <th className="p-3 text-left">Notas</th>
                   <th className="p-3 text-left">Data</th>
@@ -51,21 +73,26 @@ const InteractionListPage = () => {
               </thead>
               <tbody>
                 {interactions.map((interaction) => (
-                  <tr key={interaction.id} className='dark:hover:bg-gray-800 hover:bg-gray-100'>
+                  <tr
+                    key={interaction.id}
+                    className="hover:bg-gray-100 dark:hover:bg-gray-800"
+                  >
                     <td className="p-3">{interaction.type}</td>
                     <td className="p-3">{interaction.notes}</td>
-                    <td className="p-3">{new Date(interaction.date).toLocaleDateString()}</td>
-                    <td className="p-3">{interaction.customerName}</td>
-                    <td className="p-3">{interaction.leadName}</td>
-                    <td className="p-3 space-x-2">
-                      <Link to={`/interacoes/${interaction.id}`} className="text-blue-500 hover:underline">
-                        Editar
+                    <td className="p-3">
+                      {new Date(interaction.date).toLocaleDateString()}
+                    </td>
+                    <td className="p-3">{interaction.customerName ?? '—'}</td>
+                    <td className="p-3">{interaction.leadName ?? '—'}</td>
+                    <td className="p-3 space-x-6">
+                      <Link to={`/interacoes/${interaction.id}`} className="text-blue-500">
+                        <FontAwesomeIcon icon={faEdit} title='Editar' />
                       </Link>
                       <button
-                        className="text-red-500 hover:underline"
-                        onClick={() => console.log('Excluir', interaction.id)}
+                        className="text-red-500"
+                        onClick={() => setInteractionToDelete(interaction)}
                       >
-                        Excluir
+                        <FontAwesomeIcon icon={faTrashCan} title='Excluir' />
                       </button>
                     </td>
                   </tr>
@@ -75,6 +102,12 @@ const InteractionListPage = () => {
           </div>
         )}
       </div>
+
+      <ConfirmDelete
+        isOpen={interactionToDelete !== null}
+        onClose={() => setInteractionToDelete(null)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };

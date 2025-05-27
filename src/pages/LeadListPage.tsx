@@ -3,10 +3,14 @@ import type { Lead } from '../models/Lead';
 import { LeadService } from '../services/LeadService';
 import { Link } from 'react-router-dom';
 import { LeadStatus } from '../models/enums/LeadStatus';
+import ConfirmDelete from '../components/ConfirmDelete';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 const LeadListPage = () => {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
+  const [leadToDelete, setLeadToDelete] = useState<Lead | null>(null);
 
   useEffect(() => {
     const fetchLeads = async () => {
@@ -22,6 +26,19 @@ const LeadListPage = () => {
 
     fetchLeads();
   }, []);
+
+  const handleDelete = async () => {
+    if (!leadToDelete) return;
+
+    try {
+      await LeadService.delete(leadToDelete.id);
+      setLeads((prev) => prev.filter((l) => l.id !== leadToDelete.id));
+    } catch (error) {
+      console.error('Erro ao excluir lead:', error);
+    } finally {
+      setLeadToDelete(null);
+    }
+  };
 
   const leadStatusLabel = (status: number) => {
     switch (status) {
@@ -41,11 +58,11 @@ const LeadListPage = () => {
   };
 
   return (
-    <div className='min-h-screen p-6 dark:bg-gray-900 dark:text-white bg-gray-100 text-gray-900'>
+    <div className='min-h-screen p-6 text-gray-900 bg-background dark:bg-dark-background dark:text-white transition-colors duration-300'>
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Leads</h1>
-          <Link to="/leads/novo" className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          <Link to="/leads/novo" className="px-4 py-2 bg-primary dark:bg-secondary text-white rounded hover:bg-dark-primary dark:hover:bg-dark-secondary transition duration-200">
             Novo Lead
           </Link>
         </div>
@@ -75,15 +92,15 @@ const LeadListPage = () => {
                     <td className="p-3">{leadStatusLabel(lead.status)}</td>
                     <td className="p-3">{lead.userName ?? '-'}</td>
                     <td className="p-3">{lead.customerName ?? '-'}</td>
-                    <td className="p-3 space-x-2">
-                      <Link to={`/leads/${lead.id}`} className="text-blue-500 hover:underline">
-                        Editar
+                    <td className="p-3 space-x-6">
+                      <Link to={`/leads/${lead.id}`} className="text-blue-500">
+                        <FontAwesomeIcon icon={faEdit} title='Editar' />
                       </Link>
                       <button
-                        className="text-red-500 hover:underline"
-                        onClick={() => console.log('Excluir', lead.id)}
+                        className="text-red-500"
+                        onClick={() => setLeadToDelete(lead)}
                       >
-                        Excluir
+                        <FontAwesomeIcon icon={faTrashCan} title='Excluir' />
                       </button>
                     </td>
                   </tr>
@@ -93,6 +110,12 @@ const LeadListPage = () => {
           </div>
         )}
       </div>
+
+      <ConfirmDelete
+        isOpen={leadToDelete !== null}
+        onClose={() => setLeadToDelete(null)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };

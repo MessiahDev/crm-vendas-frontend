@@ -77,7 +77,7 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen p-6 dark:bg-gray-900 dark:text-white bg-gray-100 text-gray-800">
+    <div className="min-h-screen p-6 dark:bg-dark-background dark:text-white bg-gray-100 text-gray-800 transition-colors duration-300">
       <header className="max-w-7xl mx-auto rounded-xl flex items-center justify-between px-6 py-4 bg-white dark:bg-gray-800 shadow-md">
         <h1 className="text-xl font-bold">Dashboard</h1>
         <div className="flex items-center gap-4">

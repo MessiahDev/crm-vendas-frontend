@@ -22,7 +22,7 @@ export const CustomerService = {
         return response.data;
     },
 
-    async remove(id: number): Promise<void> {
+    async delete(id: number): Promise<void> {
         await api.delete(`/Customer/${id}`);
     }
 };
