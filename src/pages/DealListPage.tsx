@@ -39,6 +39,7 @@ const DealListPage = () => {
    const fetchDeals = async () => {
       try {
          const data = await DealService.getAll();
+         console.log('Negócios recebidos:', data);
          setDeals(data);
       } catch (error) {
          console.error('Erro ao buscar negócios:', error);
@@ -100,8 +101,8 @@ const DealListPage = () => {
                               <td className="p-3">{deal.title}</td>
                               <td className="p-3">{deal.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                               <td className="p-3">{getStageLabel(deal.stage)}</td>
-                              <td className="p-3">{deal.customerName ?? '—'}</td>
-                              <td className="p-3">{deal.leadName ?? '—'}</td>
+                              <td className="p-3">{deal.customer?.name ?? '—'}</td>
+                              <td className="p-3">{deal.Lead?.name ?? '—'}</td>
                               <td className="p-3 space-x-6">
                                  <Link to={`/negocios/${deal.id}`} className="text-blue-500">
                                     <FontAwesomeIcon icon={faEdit} title='Editar' />

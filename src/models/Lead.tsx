@@ -1,4 +1,6 @@
+import type { Customer } from "./Customer";
 import { LeadStatus } from "./enums/LeadStatus";
+import type { User } from "./User";
 
 export interface Lead {
     id: number;
@@ -9,9 +11,9 @@ export interface Lead {
     status: LeadStatus;
     createdAt: Date;
     userId: number;
-    userName?: string;
+    user?: User;
     customerId: number;
-    customerName?: string;
+    customer?: Customer;
 }
 
 export interface CreateLead {

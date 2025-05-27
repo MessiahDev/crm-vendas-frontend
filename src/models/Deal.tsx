@@ -1,4 +1,6 @@
+import type { Customer } from "./Customer";
 import type { DealStage } from "./enums/DealStage";
+import type { Lead } from "./Lead";
 
 export interface Deal {
     id: number;
@@ -7,7 +9,7 @@ export interface Deal {
     stage: DealStage;
     createdAt: Date;
     customerId: number;
-    customerName?: string;
+    customer?: Customer;
     leadId: number;
-    leadName?: string;
+    Lead?: Lead;
 }

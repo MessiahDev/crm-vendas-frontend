@@ -50,7 +50,9 @@ const DealFormPage = () => {
     stage: DealStage.Novo,
     createdAt: new Date(),
     customerId: 0,
+    customer: undefined,
     leadId: 0,
+    Lead: undefined,
   });
 
   const [formattedValue, setFormattedValue] = useState('');
@@ -80,9 +82,11 @@ const DealFormPage = () => {
             stage: deal.stage,
             createdAt: new Date(deal.createdAt),
             customerId: deal.customerId,
+            customer: deal.customer,
             leadId: deal.leadId,
+            Lead: deal.Lead,
           });
-          setFormattedValue(deal.value.toFixed(2).replace('.', '')); // ex: "123456" para R$ 1.234,56
+          setFormattedValue(deal.value.toFixed(2).replace('.', ''));
         })
         .catch(() => toast.error('Erro ao carregar negociação'))
         .finally(() => setLoading(false));

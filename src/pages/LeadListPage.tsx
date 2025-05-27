@@ -90,8 +90,8 @@ const LeadListPage = () => {
                     <td className="p-3">{lead.name}</td>
                     <td className="p-3">{lead.email}</td>
                     <td className="p-3">{leadStatusLabel(lead.status)}</td>
-                    <td className="p-3">{lead.userName ?? '-'}</td>
-                    <td className="p-3">{lead.customerName ?? '-'}</td>
+                    <td className="p-3">{lead.user?.name ?? '-'}</td>
+                    <td className="p-3">{lead.customer?.name ?? '-'}</td>
                     <td className="p-3 space-x-6">
                       <Link to={`/leads/${lead.id}`} className="text-blue-500">
                         <FontAwesomeIcon icon={faEdit} title='Editar' />
