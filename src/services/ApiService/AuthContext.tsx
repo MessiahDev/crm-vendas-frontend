@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { userService } from '../UserService';
 import type { User, LoginRequest, AuthResponse } from '../../models/User'
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const userString = localStorage.getItem('user');
 
   if (token && userString) {
-      userService.validateToken(token)
+      userService.validateToken()
         .then(() => setUser(JSON.parse(userString)))
         .catch(() => {
           localStorage.removeItem('token');

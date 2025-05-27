@@ -4,7 +4,6 @@ import ThemeToggle from '../components/ThemeToggle';
 import Footer from '../components/footer';
 
 const MainLayout = () => {
-  const currentYear = new Date().getFullYear();
 
   return (
     <div className="min-h-screen flex bg-background dark:bg-dark-background text-gray-800 dark:text-white transition-colors duration-300">
