@@ -82,8 +82,8 @@ const InteractionListPage = () => {
                     <td className="p-3">
                       {new Date(interaction.date).toLocaleDateString()}
                     </td>
-                    <td className="p-3">{interaction.customerName ?? '—'}</td>
-                    <td className="p-3">{interaction.leadName ?? '—'}</td>
+                    <td className="p-3">{interaction.customer?.name ?? '—'}</td>
+                    <td className="p-3">{interaction.lead?.name ?? '—'}</td>
                     <td className="p-3 space-x-6">
                       <Link to={`/interacoes/${interaction.id}`} className="text-blue-500">
                         <FontAwesomeIcon icon={faEdit} title='Editar' />

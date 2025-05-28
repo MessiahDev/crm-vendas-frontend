@@ -130,7 +130,7 @@ export default function DashboardPage() {
               <li key={activity.id} className="flex items-center gap-2">
                 <FontAwesomeIcon icon={faClock} className="text-primary dark:text-secondary" />
                 <span>
-                  {activity.type} com {activity.customerName || activity.leadName} - {' '}
+                  {activity.type} com {activity.customer?.name || activity.lead?.name} - {' '}
                   {new Date(activity.date).toLocaleString('pt-BR', {
                     day: '2-digit',
                     month: '2-digit',
