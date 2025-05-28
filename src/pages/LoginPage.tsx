@@ -10,15 +10,19 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       await login({ email, password });
       navigate('/dashboard');
     } catch (err) {
       setError('Email ou senha inválidos.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,9 +66,10 @@ function LoginPage() {
 
             <button
               type="submit"
+              disabled={loading}
               className="w-full py-2 bg-primary dark:bg-secondary hover:bg-dark-primary dark:hover:bg-dark-secondary text-white font-semibold rounded-lg transition-colors duration-300"
             >
-              Entrar
+              {loading ? 'Entarando...' : 'Entrar'}
             </button>
 
             <div className="flex justify-between mt-4 text-sm">
