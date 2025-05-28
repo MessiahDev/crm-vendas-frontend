@@ -50,9 +50,39 @@ const DealFormPage = () => {
     stage: DealStage.Novo,
     createdAt: new Date(),
     customerId: 0,
-    customer: undefined,
+    customer: {
+      id: 0,
+      name: '',
+      email: '',
+      phone: '',
+      convertedAt: new Date(),
+      userId: 0,
+      user: {
+        id: 0,
+        name: '',
+        email: '',
+        role: 2,
+        password: '',
+      },
+    },
     leadId: 0,
-    Lead: undefined,
+    Lead: {
+      id: 0,
+      name: '',
+      email: '',
+      phone: '',
+      userId: 0,
+      user: {
+        id: 0,
+        name: '',
+        email: '',
+        role: 2,
+        password: '',
+      },
+      status: 0,
+      createdAt: new Date(),
+      customerId: 0
+    },
   });
 
   const [formattedValue, setFormattedValue] = useState('');
