@@ -39,7 +39,6 @@ const DealListPage = () => {
    const fetchDeals = async () => {
       try {
          const data = await DealService.getAll();
-         console.log('Negócios recebidos:', data);
          setDeals(data);
       } catch (error) {
          console.error('Erro ao buscar negócios:', error);
