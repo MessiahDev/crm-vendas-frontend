@@ -69,7 +69,7 @@ function LoginPage() {
               disabled={loading}
               className="w-full py-2 bg-primary dark:bg-secondary hover:bg-dark-primary dark:hover:bg-dark-secondary text-white font-semibold rounded-lg transition-colors duration-300"
             >
-              {loading ? 'Entarando...' : 'Entrar'}
+              {loading ? 'Entrando...' : 'Entrar'}
             </button>
 
             <div className="flex justify-between mt-4 text-sm">
