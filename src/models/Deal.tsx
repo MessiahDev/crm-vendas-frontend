@@ -11,5 +11,5 @@ export interface Deal {
     customerId: number;
     customer?: Customer;
     leadId: number;
-    Lead?: Lead;
+    lead?: Lead;
 }

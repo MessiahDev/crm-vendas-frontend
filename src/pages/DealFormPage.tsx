@@ -66,7 +66,7 @@ const DealFormPage = () => {
       },
     },
     leadId: 0,
-    Lead: {
+    lead: {
       id: 0,
       name: '',
       email: '',
@@ -114,7 +114,7 @@ const DealFormPage = () => {
             customerId: deal.customerId,
             customer: deal.customer,
             leadId: deal.leadId,
-            Lead: deal.Lead,
+            lead: deal.lead,
           });
           setFormattedValue(deal.value.toFixed(2).replace('.', ''));
         })

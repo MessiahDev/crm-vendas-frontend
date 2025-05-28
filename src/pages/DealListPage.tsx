@@ -102,7 +102,7 @@ const DealListPage = () => {
                               <td className="p-3">{deal.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</td>
                               <td className="p-3">{getStageLabel(deal.stage)}</td>
                               <td className="p-3">{deal.customer?.name ?? '—'}</td>
-                              <td className="p-3">{deal.Lead?.name ?? '—'}</td>
+                              <td className="p-3">{deal.lead?.name ?? '—'}</td>
                               <td className="p-3 space-x-6">
                                  <Link to={`/negocios/${deal.id}`} className="text-blue-500">
                                     <FontAwesomeIcon icon={faEdit} title='Editar' />
