@@ -2,16 +2,11 @@ import { useEffect, useState } from 'react';
 import { faChartLine, faUserPlus, faHandshake, faUsers, faClock } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { CustomerService } from '../services/CustomerService';
-import { LeadService } from '../services/LeadService';
-import { DealService } from '../services/DealService';
-import { InteractionService } from '../services/InteractionService';
-
-import type { Customer } from '../models/Customer';
-import type { Lead } from '../models/Lead';
-import type { Deal } from '../models/Deal';
-import type { Interaction } from '../models/Interaction';
+import { DashboardService } from '../services/DashboardService';
+import type { DashboardData } from '../models/DashboardData';
 import { DealStage } from '../models/enums/DealStage';
+import type { Lead } from '../models/Lead';
+import type { Interaction } from '../models/Interaction';
 
 export default function DashboardPage() {
   const [customerCount, setCustomerCount] = useState<number>(0);
@@ -25,24 +20,27 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function loadData() {
-      const customers: Customer[] = await CustomerService.getAll();
-      setCustomerCount(customers.length);
+      const dashboard: DashboardData = await DashboardService.getAll();
 
-      const leads: Lead[] = await LeadService.getAll();
-      setLeadCount(leads.length);
+      // Clientes
+      setCustomerCount(dashboard.customers.length);
+
+      // Leads
+      setLeadCount(dashboard.leads.length);
       setRecentLeads(
-        leads
+        dashboard.leads
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
           .slice(0, 3)
       );
 
-      const deals: Deal[] = await DealService.getAll();
+      // Negócios
+      const deals = dashboard.deals;
       const inProgress = deals.filter(d =>
         d.stage === DealStage.Novo ||
         d.stage === DealStage.Negociacao ||
         d.stage === DealStage.PropostaEnviada
       );
-      const won = deals.filter(d => d.stage === 3);
+      const won = deals.filter(d => d.stage === DealStage.FechadoGanho);
       setDealsInProgress(inProgress.length);
       setSalesTotal(won.reduce((sum, d) => sum + (d.value ?? 0), 0));
 
@@ -53,12 +51,14 @@ export default function DashboardPage() {
         'Fechado (ganho)': won.length,
       });
 
-      const interactions: Interaction[] = await InteractionService.getAll();
-      const recent = interactions
-        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-        .slice(0, 3);
-      setRecentActivities(recent);
+      // Atividades recentes
+      setRecentActivities(
+        dashboard.interactions
+          .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+          .slice(0, 3)
+      );
 
+      // Top clientes
       const customerSales: Record<string, number> = {};
       won.forEach(deal => {
         const nome = deal.customer?.name ?? 'Desconhecido';
