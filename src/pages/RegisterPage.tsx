@@ -17,6 +17,7 @@ function RegisterPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const [loading, setLoading] = useState(false); // <-- adicionado
 
   useEffect(() => {
     setPasswordsMatch(password === confirmPassword);
@@ -31,11 +32,15 @@ function RegisterPage() {
       return;
     }
 
+    setLoading(true); // <-- inicia loading
+
     try {
       await userService.register({ name, email, password, role: UserRole.User });
       navigate('/login');
     } catch (err) {
       setError('Erro ao cadastrar. Tente novamente.');
+    } finally {
+      setLoading(false); // <-- encerra loading
     }
   };
 
@@ -132,10 +137,10 @@ function RegisterPage() {
 
             <button
               type="submit"
+              disabled={!passwordsMatch || loading}
               className="w-full py-2 bg-primary dark:bg-secondary hover:bg-dark-primary dark:hover:bg-dark-secondary text-white font-semibold rounded-lg transition-colors duration-300"
-              disabled={!passwordsMatch}
             >
-              Cadastrar
+              {loading ? 'Cadastrando...' : 'Cadastrar'}
             </button>
 
             <button
